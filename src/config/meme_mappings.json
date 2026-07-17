@@ -2,103 +2,136 @@
   "gestures": [
     {
       "id": "thumbs_up",
-      "label": "Thumbs Up",
-      "caption": "APPROVED",
-      "font": "Impact",
-      "color": "#E2FF3D",
-      "animation": "bounce"
+      "displayName": "Thumbs Up",
+      "captionTemplate": "APPROVED",
+      "animationType": "BOUNCE",
+      "minConfidence": 0.75
     },
     {
       "id": "fist",
-      "label": "Fist",
-      "caption": "POWER UP",
-      "font": "Impact",
-      "color": "#FF3B30",
-      "animation": "shake"
+      "displayName": "Fist",
+      "captionTemplate": "POWER UP",
+      "animationType": "SHAKE",
+      "minConfidence": 0.75
     },
     {
       "id": "ok_sign",
-      "label": "OK Sign",
-      "caption": "PERFECT",
-      "font": "Impact",
-      "color": "#2FE0FF",
-      "animation": "pulse"
+      "displayName": "OK Sign",
+      "captionTemplate": "PERFECT",
+      "animationType": "PULSE",
+      "minConfidence": 0.75
     },
     {
       "id": "shh",
-      "label": "Shh",
-      "caption": "SILENCE",
-      "font": "Impact",
-      "color": "#FFFFFF",
-      "animation": "slide"
+      "displayName": "Shh",
+      "captionTemplate": "SILENCE",
+      "animationType": "SLIDE",
+      "minConfidence": 0.75
     },
     {
       "id": "peace",
-      "label": "Peace",
-      "caption": "CHILL VIBES",
-      "font": "Impact",
-      "color": "#2FE0FF",
-      "animation": "wiggle"
+      "displayName": "Peace",
+      "captionTemplate": "CHILL VIBES",
+      "animationType": "WIGGLE",
+      "minConfidence": 0.75
     },
     {
       "id": "rock",
-      "label": "Rock On",
-      "caption": "METAL",
-      "font": "Impact",
-      "color": "#E2FF3D",
-      "animation": "wiggle"
+      "displayName": "Rock On",
+      "captionTemplate": "METAL",
+      "animationType": "WIGGLE",
+      "minConfidence": 0.75
     },
     {
       "id": "call_me",
-      "label": "Call Me",
-      "caption": "HIT ME UP",
-      "font": "Impact",
-      "color": "#FFFFFF",
-      "animation": "bounce"
+      "displayName": "Call Me",
+      "captionTemplate": "HIT ME UP",
+      "animationType": "BOUNCE",
+      "minConfidence": 0.75
+    },
+    {
+      "id": "wave",
+      "displayName": "Wave",
+      "captionTemplate": "HELLO",
+      "animationType": "SLIDE",
+      "minConfidence": 0.75
+    },
+    {
+      "id": "pinch",
+      "displayName": "Pinch",
+      "captionTemplate": "COMPRESSING",
+      "animationType": "ZOOM_PULSE",
+      "minConfidence": 0.75
     }
   ],
   "expressions": [
     {
       "id": "smile",
-      "label": "Smile",
-      "caption": "HAPPY TIMES",
-      "font": "Impact",
-      "color": "#E2FF3D",
-      "animation": "pulse"
+      "displayName": "Smile",
+      "captionTemplate": "HAPPY TIMES",
+      "animationType": "PULSE",
+      "minConfidence": 0.75
     },
     {
       "id": "tongue_out",
-      "label": "Tongue Out",
-      "caption": "SILLY ME",
-      "font": "Impact",
-      "color": "#2FE0FF",
-      "animation": "wiggle"
+      "displayName": "Tongue Out",
+      "captionTemplate": "SILLY ME",
+      "animationType": "WIGGLE",
+      "minConfidence": 0.75
     },
     {
       "id": "angry",
-      "label": "Angry",
-      "caption": "TRIGGERED",
-      "font": "Impact",
-      "color": "#FF3B30",
-      "animation": "vibrate"
+      "displayName": "Angry",
+      "captionTemplate": "TRIGGERED",
+      "animationType": "VIBRATE",
+      "minConfidence": 0.75
+    },
+    {
+      "id": "sad",
+      "displayName": "Sad",
+      "captionTemplate": "FEELS BAD",
+      "animationType": "SLIDE",
+      "minConfidence": 0.75
+    },
+    {
+      "id": "surprised",
+      "displayName": "Surprised",
+      "captionTemplate": "WOW",
+      "animationType": "ZOOM_PULSE",
+      "minConfidence": 0.75
+    },
+    {
+      "id": "wink",
+      "displayName": "Wink",
+      "captionTemplate": "KAWAII VIBES",
+      "animationType": "SLIDE",
+      "minConfidence": 0.75
     }
   ],
   "combos": [
     {
       "gesture": "peace",
       "expression": "wink",
-      "caption": "KAWAII VIBES",
-      "overlay": "sparkles",
-      "color": "#FF2FE0",
-      "animation": "wiggle"
+      "captionTemplate": "SUPER CUTE",
+      "animationType": "WIGGLE"
     },
     {
       "gesture": "fist",
       "expression": "angry",
-      "caption": "RAGE MODE",
-      "overlay": "fire",
-      "color": "#FF0000",
-      "animation": "shake"
+      "captionTemplate": "RAGE MODE",
+      "animationType": "SHAKE"
+    },
+    {
+      "gesture": "thumbs_up",
+      "expression": "smile",
+      "captionTemplate": "EXCELLENT",
+      "animationType": "ZOOM_PULSE"
     }
-  ]
+  ],
+  "no_detection": {
+    "id": "no_detection",
+    "displayName": "Mystery Mood",
+    "captionTemplate": "MOOD: UNKNOWN",
+    "animationType": "PULSE"
+  }
 }

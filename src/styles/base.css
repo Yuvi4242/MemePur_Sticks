@@ -273,3 +273,216 @@ button {
   transform: scale(1.2);
   box-shadow: 0 0 8px var(--accent-primary);
 }
+
+/* --- Camera UI & Foundation Styles --- */
+
+/* Theme Transition */
+body, header, main, aside, section, div, span, button, input {
+  transition: background-color var(--transition-normal), border-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* Light Theme Overrides */
+html[data-theme="light"] {
+  --bg-primary: #F0F2F5;
+  --bg-deep: #E4E6EB;
+  --bg-panel: #FFFFFF;
+  --text-primary: #0F1419;
+  --text-secondary: #5B7083;
+  --text-muted: #8899A6;
+  --border-color: #CFD9DE;
+  --border-focus: #0F1419;
+}
+
+/* Camera Layout */
+.hud-camera-container {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-deep);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+}
+
+.hud-camera-container:focus,
+.hud-camera-container:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px rgba(226, 255, 61, 0.2);
+}
+
+.hud-camera-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter var(--transition-fast);
+  display: block;
+}
+
+/* Camera Flash Animation */
+.hud-camera-container.flash .hud-camera-canvas {
+  filter: brightness(2) contrast(0.8);
+}
+
+.hud-camera-container.flash {
+  animation: hud-border-flash 0.15s ease-out;
+}
+
+@keyframes hud-border-flash {
+  0% {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 15px var(--text-primary);
+  }
+  100% {
+    border-color: var(--border-color);
+    box-shadow: none;
+  }
+}
+
+/* Camera HUD Overlays */
+.hud-camera-overlay-top {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hud-camera-overlay-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+/* Capture & Retake Buttons */
+.hud-shutter-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  border: 4px solid var(--bg-deep);
+  box-shadow: 0 0 0 2px var(--text-primary);
+  cursor: pointer;
+  outline: none;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.hud-shutter-btn:hover {
+  transform: scale(1.08);
+}
+
+.hud-shutter-btn:active {
+  transform: scale(0.92);
+}
+
+.hud-shutter-btn.dimmed {
+  opacity: 0.3;
+  transform: scale(0.92);
+}
+
+/* Retake button styled in mono terminal style */
+.hud-retake-btn {
+  padding: 8px 16px;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  color: var(--accent-primary);
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: var(--border-radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: all var(--transition-fast);
+}
+
+.hud-retake-btn:hover {
+  background-color: var(--accent-primary);
+  color: var(--bg-deep);
+  border-color: var(--accent-primary);
+  transform: translateY(-1px);
+}
+
+.hud-retake-btn:active {
+  transform: translateY(1px);
+}
+
+/* Diagnostic & Error Panel styles */
+.hud-diagnostic-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: var(--text-primary);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.hud-diagnostic-title {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--status-red);
+}
+
+.hud-diagnostic-instructions {
+  max-width: 400px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.hud-diagnostic-instructions ol {
+  margin-left: 18px;
+  margin-top: 8px;
+}
+
+.hud-diagnostic-instructions li {
+  margin-bottom: 6px;
+}
+
+.hud-diagnostic-ua-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.hud-diagnostic-btn {
+  padding: 8px 16px;
+  background-color: rgba(226, 255, 61, 0.1);
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.hud-diagnostic-btn:hover {
+  background-color: var(--accent-primary);
+  color: var(--bg-deep);
+}
+
+.hud-diagnostic-btn:active {
+  transform: scale(0.98);
+}
+
