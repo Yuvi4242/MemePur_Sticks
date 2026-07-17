@@ -1,0 +1,36 @@
+:root {
+  /* Color Palette - Terminal HUD Theme */
+  --bg-primary: #0A0A0A;
+  --bg-deep: #000000;
+  --bg-panel: #0E0E0E;
+  
+  --accent-primary: #E2FF3D;     /* Neon Lime-Yellow */
+  --accent-secondary: #2FE0FF;   /* Neon Cyan */
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: #8A8A8A;
+  --text-muted: #555555;
+  
+  --border-color: #1F1F1F;
+  --border-focus: #E2FF3D;
+  
+  /* Status Colors */
+  --status-lime: #39FF14;
+  --status-cyan: #2FE0FF;
+  --status-gray: #555555;
+  --status-red: #FF3B30;         /* For REC dot */
+
+  /* Typography */
+  --font-mono: 'JetBrains Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  
+  /* Layout & Sizing */
+  --header-height: 60px;
+  --sidebar-width: 280px;
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 20px;      /* For bottom toolbar pill */
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}

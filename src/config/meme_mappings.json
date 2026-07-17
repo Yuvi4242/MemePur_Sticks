@@ -1,0 +1,104 @@
+{
+  "gestures": [
+    {
+      "id": "thumbs_up",
+      "label": "Thumbs Up",
+      "caption": "APPROVED",
+      "font": "Impact",
+      "color": "#E2FF3D",
+      "animation": "bounce"
+    },
+    {
+      "id": "fist",
+      "label": "Fist",
+      "caption": "POWER UP",
+      "font": "Impact",
+      "color": "#FF3B30",
+      "animation": "shake"
+    },
+    {
+      "id": "ok_sign",
+      "label": "OK Sign",
+      "caption": "PERFECT",
+      "font": "Impact",
+      "color": "#2FE0FF",
+      "animation": "pulse"
+    },
+    {
+      "id": "shh",
+      "label": "Shh",
+      "caption": "SILENCE",
+      "font": "Impact",
+      "color": "#FFFFFF",
+      "animation": "slide"
+    },
+    {
+      "id": "peace",
+      "label": "Peace",
+      "caption": "CHILL VIBES",
+      "font": "Impact",
+      "color": "#2FE0FF",
+      "animation": "wiggle"
+    },
+    {
+      "id": "rock",
+      "label": "Rock On",
+      "caption": "METAL",
+      "font": "Impact",
+      "color": "#E2FF3D",
+      "animation": "wiggle"
+    },
+    {
+      "id": "call_me",
+      "label": "Call Me",
+      "caption": "HIT ME UP",
+      "font": "Impact",
+      "color": "#FFFFFF",
+      "animation": "bounce"
+    }
+  ],
+  "expressions": [
+    {
+      "id": "smile",
+      "label": "Smile",
+      "caption": "HAPPY TIMES",
+      "font": "Impact",
+      "color": "#E2FF3D",
+      "animation": "pulse"
+    },
+    {
+      "id": "tongue_out",
+      "label": "Tongue Out",
+      "caption": "SILLY ME",
+      "font": "Impact",
+      "color": "#2FE0FF",
+      "animation": "wiggle"
+    },
+    {
+      "id": "angry",
+      "label": "Angry",
+      "caption": "TRIGGERED",
+      "font": "Impact",
+      "color": "#FF3B30",
+      "animation": "vibrate"
+    }
+  ],
+  "combos": [
+    {
+      "gesture": "peace",
+      "expression": "wink",
+      "caption": "KAWAII VIBES",
+      "overlay": "sparkles",
+      "color": "#FF2FE0",
+      "animation": "wiggle"
+    },
+    {
+      "gesture": "fist",
+      "expression": "angry",
+      "caption": "RAGE MODE",
+      "overlay": "fire",
+      "color": "#FF0000",
+      "animation": "shake"
+    }
+  ]
+}
