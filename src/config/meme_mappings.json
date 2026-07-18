@@ -3,20 +3,25 @@
     {
       "id": "thumbs_up",
       "displayName": "Thumbs Up",
+      "emoji": "👍",
       "captionTemplate": "APPROVED",
       "animationType": "BOUNCE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/thumbs_up.svg"
     },
     {
       "id": "fist",
       "displayName": "Fist",
+      "emoji": "✊",
       "captionTemplate": "POWER UP",
       "animationType": "SHAKE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/fist.svg"
     },
     {
       "id": "ok_sign",
       "displayName": "OK Sign",
+      "emoji": "👌",
       "captionTemplate": "PERFECT",
       "animationType": "PULSE",
       "minConfidence": 0.75
@@ -24,34 +29,43 @@
     {
       "id": "shh",
       "displayName": "Shh",
+      "emoji": "🤫",
       "captionTemplate": "SILENCE",
       "animationType": "SLIDE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/shh.svg"
     },
     {
       "id": "peace",
       "displayName": "Peace",
+      "emoji": "✌️",
       "captionTemplate": "CHILL VIBES",
       "animationType": "WIGGLE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/peace.svg"
     },
     {
       "id": "rock",
       "displayName": "Rock On",
+      "emoji": "🤟",
       "captionTemplate": "METAL",
       "animationType": "WIGGLE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/rock.svg"
     },
     {
       "id": "call_me",
       "displayName": "Call Me",
+      "emoji": "🤙",
       "captionTemplate": "HIT ME UP",
       "animationType": "BOUNCE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/call_me.svg"
     },
     {
       "id": "wave",
       "displayName": "Wave",
+      "emoji": "👋",
       "captionTemplate": "HELLO",
       "animationType": "SLIDE",
       "minConfidence": 0.75
@@ -59,6 +73,7 @@
     {
       "id": "pinch",
       "displayName": "Pinch",
+      "emoji": "🤏",
       "captionTemplate": "COMPRESSING",
       "animationType": "ZOOM_PULSE",
       "minConfidence": 0.75
@@ -68,13 +83,16 @@
     {
       "id": "smile",
       "displayName": "Smile",
+      "emoji": "😊",
       "captionTemplate": "HAPPY TIMES",
       "animationType": "PULSE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/smile.svg"
     },
     {
       "id": "tongue_out",
       "displayName": "Tongue Out",
+      "emoji": "😝",
       "captionTemplate": "SILLY ME",
       "animationType": "WIGGLE",
       "minConfidence": 0.75
@@ -82,13 +100,16 @@
     {
       "id": "angry",
       "displayName": "Angry",
+      "emoji": "😠",
       "captionTemplate": "TRIGGERED",
       "animationType": "VIBRATE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/angry.svg"
     },
     {
       "id": "sad",
       "displayName": "Sad",
+      "emoji": "😢",
       "captionTemplate": "FEELS BAD",
       "animationType": "SLIDE",
       "minConfidence": 0.75
@@ -96,16 +117,20 @@
     {
       "id": "surprised",
       "displayName": "Surprised",
+      "emoji": "😲",
       "captionTemplate": "WOW",
       "animationType": "ZOOM_PULSE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/surprised.svg"
     },
     {
       "id": "wink",
       "displayName": "Wink",
+      "emoji": "😉",
       "captionTemplate": "KAWAII VIBES",
       "animationType": "SLIDE",
-      "minConfidence": 0.75
+      "minConfidence": 0.75,
+      "templateImage": "/src/assets/meme-templates/wink.svg"
     }
   ],
   "combos": [

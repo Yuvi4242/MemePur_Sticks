@@ -5,18 +5,36 @@ import { MLDetection } from './ml/detection';
 import { HUDComponent } from './components/hud';
 import { StatsStore } from './state/stats-store';
 import { MLSegmentation } from './ml/segmentation';
+import { SidebarComponent } from './components/sidebar';
+import { showMultipleBadgeUnlocks } from './components/badge-toast';
+import { OnboardingComponent } from './components/onboarding';
+import { TVFrameComponent } from './components/tv-frame';
+import { MemePreviewComponent } from './components/meme-preview';
+import { IntroSequenceComponent } from './components/intro';
 
 console.log('Meme Verse 2.0 // Terminal HUD Initialized');
+
+// Start intro sequence immediately (won't block anything)
+new IntroSequenceComponent();
 
 // App DOM Setup
 const app = document.querySelector<HTMLDivElement>('#app');
 if (app) {
   app.innerHTML = `
-    <div class="hud-app-wrapper" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+    <div class="hud-app-wrapper" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; position: relative;">
+      
+      <!-- Ambient Background Blobs -->
+      <div class="ambient-blob" style="top: -10%; left: -10%; background: var(--accent-primary);"></div>
+      <div class="ambient-blob" style="top: 40%; right: -10%; background: var(--accent-secondary);"></div>
+      <div class="ambient-blob" style="bottom: -20%; left: 30%; background: var(--accent-tertiary, #FF3DA6);"></div>
+
       <!-- Header / Top Bar -->
-      <header class="hud-header" style="height: var(--header-height); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background-color: var(--bg-panel); z-index: 10; flex-shrink: 0;">
+      <header class="hud-header" style="height: var(--header-height); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background-color: var(--bg-panel); z-index: 10; flex-shrink: 0; position: relative;">
         <div style="display: flex; align-items: center; gap: 16px;">
-          <h1 class="hud-logo" style="color: var(--accent-primary); font-size: 20px; margin: 0;">MEME VERSE 2.0</h1>
+          <div style="display: flex; flex-direction: column;">
+            <h1 class="hud-logo" style="color: var(--accent-primary); font-size: 20px; margin: 0;">MEMEPUR_STICKS</h1>
+            <div style="font-size: 9px; color: var(--text-muted); letter-spacing: 0.1em; font-weight: bold; margin-top: 2px;">REACT. MATCH. STICK.</div>
+          </div>
           <div class="hud-status-pill" style="height: 22px;">
             <span class="hud-status-dot lime"></span>
             <span style="font-size: 9px; font-weight: bold;">SYS_ACTIVE</span>
@@ -50,50 +68,31 @@ if (app) {
       </header>
       
       <!-- Main Content Area -->
-      <div style="display: flex; flex: 1; min-height: 0;">
-        <!-- Left Sidebar -->
-        <aside style="width: var(--sidebar-width); border-right: 1px solid var(--border-color); background-color: var(--bg-deep); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0;">
-          <div style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
-            <h2 style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.1em;">GESTURE TRIGGERS</h2>
-            
-            <!-- Config-driven rows container -->
-            <div id="sidebar-rows-container" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; min-height: 0;">
-              <!-- Dynamically populated rows -->
-              <div style="font-size: 11px; color: var(--text-muted); padding: 10px;">Loading triggers...</div>
-            </div>
-          </div>
-          
-          <!-- Stats Summary Panel -->
-          <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 16px; flex-shrink: 0;">
-            <h2 style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.1em;">HUD STATISTICS</h2>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.8;" class="hud-numbers">
-              <div style="display: flex; justify-content: space-between;">
-                <span>TOTAL TRG:</span>
-                <span id="stats-total-trg" style="color: var(--text-primary); font-weight: bold;">0</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>MOST GEST:</span>
-                <span id="stats-most-gest" style="color: var(--accent-primary); font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;" title="None">--</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>MOST EXPR:</span>
-                <span id="stats-most-expr" style="color: var(--accent-secondary); font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;" title="None">--</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>COMBOS:</span>
-                <span id="stats-total-combos" style="color: var(--text-primary); font-weight: bold;">0</span>
-              </div>
-            </div>
-            
-            <!-- Reset Button -->
-            <button id="reset-stats-btn" class="hud-diagnostic-btn" style="width: 100%; margin-top: 16px; font-size: 10px; padding: 6px 12px;" aria-label="Reset statistics">RESET HUD STATS</button>
-          </div>
-        </aside>
+      <div style="display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; position: relative; z-index: 5;">
         
-        <!-- Center/Main Camera Panel -->
-        <main style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; background-color: var(--bg-primary); min-height: 0; overflow-y: auto;">
-          <!-- Camera Component mount node -->
-          <div id="camera-mount" style="position: relative; width: 100%; max-width: 640px; display: flex; justify-content: center;"></div>
+        <!-- Center/Main Dual TV Panel -->
+        <main style="display: flex; flex-direction: column; align-items: center; padding: 24px; flex-shrink: 0;">
+          <div id="dual-tv-container" style="display: flex; flex-direction: row; gap: 24px; width: 100%; max-width: 1200px; justify-content: center; flex-wrap: wrap;">
+            <!-- LEFT TV (Camera) -->
+            <div id="tv-left-mount" style="flex: 1 1 320px; max-width: 540px; max-height: 40vh; aspect-ratio: 4/3; display: flex; position: relative;">
+              <div id="camera-mount" style="width: 100%; height: 100%;"></div>
+              <!-- Confidence Badge -->
+              <div id="confidence-badge" class="hud-status-pill" style="position: absolute; top: 16px; right: 16px; z-index: 20; opacity: 0; transition: opacity var(--transition-fast); background: var(--bg-deep); border-color: var(--accent-primary);">
+                <span class="hud-status-dot lime"></span>
+                <span id="confidence-badge-text" style="font-size: 10px; font-weight: bold; color: var(--text-primary);">--</span>
+              </div>
+            </div>
+            
+            <!-- CENTER GAP (Export actions) -->
+            <div id="center-gap-mount" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-width: 200px;">
+               <!-- Export button and pills will be mounted here by CameraComponent -->
+            </div>
+            
+            <!-- RIGHT TV (Preview) -->
+            <div id="tv-right-mount" style="flex: 1 1 320px; max-width: 540px; max-height: 40vh; aspect-ratio: 4/3; display: flex;">
+              <div id="preview-mount" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
           
           <!-- Bottom Toolbar -->
           <div class="hud-bottom-toolbar" style="width: 100%; max-width: 640px; margin-top: 24px; flex-shrink: 0;">
@@ -110,6 +109,48 @@ if (app) {
             </div>
           </div>
         </main>
+
+        <!-- Bottom Control Deck -->
+        <div id="control-deck" style="display: flex; flex-wrap: wrap; gap: 24px; padding: 24px; background-color: var(--bg-deep); border-top: 1px solid var(--border-color); flex-shrink: 0;">
+           
+           <!-- Column 1: Gesture Triggers (Most important, goes first on mobile) -->
+           <div class="control-col" style="flex: 1 1 300px; display: flex; flex-direction: column; min-width: 0;">
+             <h2 style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.1em;">GESTURE TRIGGERS</h2>
+             <div id="sidebar-rows-container" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; mask-image: linear-gradient(to right, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%); scrollbar-width: none;">
+               <!-- Chips populated here -->
+             </div>
+           </div>
+
+           <!-- Column 2: Stats Summary Panel -->
+           <div class="control-col" style="flex: 1 1 200px; display: flex; flex-direction: column;">
+             <h2 style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.1em;">HUD STATISTICS</h2>
+             
+             <!-- 2x2 Grid for Stats -->
+             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 16px;" class="hud-numbers">
+               <div>
+                 <div style="font-size: 9px; color: var(--text-muted);">TOTAL TRG</div>
+                 <div id="stats-total-trg" style="color: var(--text-primary); font-weight: bold;">0</div>
+               </div>
+               <div>
+                 <div style="font-size: 9px; color: var(--text-muted);">COMBOS</div>
+                 <div id="stats-total-combos" style="color: var(--text-primary); font-weight: bold;">0</div>
+               </div>
+               <div>
+                 <div style="font-size: 9px; color: var(--text-muted);">MOST GEST</div>
+                 <div id="stats-most-gest" style="color: var(--accent-primary); font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="None">--</div>
+               </div>
+               <div>
+                 <div style="font-size: 9px; color: var(--text-muted);">MOST EXPR</div>
+                 <div id="stats-most-expr" style="color: var(--accent-secondary); font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="None">--</div>
+               </div>
+             </div>
+             
+             <!-- Reset Button -->
+             <button id="reset-stats-btn" class="hud-diagnostic-btn" style="font-size: 10px; padding: 6px 12px; align-self: flex-start; margin-top: auto;" aria-label="Reset statistics">RESET HUD STATS</button>
+           </div>
+           </div>
+         </div>
+       </div>
       </div>
     </div>
   `;
@@ -134,10 +175,18 @@ if (app) {
     });
   }
 
+  // --- Sidebar Component Setup ---
+  const badgesContainer = document.getElementById('badges-container');
+  const sidebar = badgesContainer ? new SidebarComponent(badgesContainer) : null;
+
   // --- Stats Persistence Setup ---
   const updateStatsUI = () => {
     const stats = StatsStore.getStats();
     
+    if (sidebar) {
+      sidebar.render();
+    }
+
     // Update daily streak
     const streakDaysEl = document.getElementById('streak-days');
     if (streakDaysEl) {
@@ -165,8 +214,11 @@ if (app) {
   };
 
   // Run initial streak check and display
-  StatsStore.updateStreak();
+  const initialBadges = StatsStore.updateStreak();
   updateStatsUI();
+  if (initialBadges.length > 0) {
+    showMultipleBadgeUnlocks(initialBadges);
+  }
 
   // Reset Stats button handler
   const resetStatsBtn = document.getElementById('reset-stats-btn');
@@ -267,11 +319,29 @@ if (app) {
           row.className = 'hud-sidebar-row';
           row.id = `sidebar-row-${item.id}`;
           row.innerHTML = `
-            <span>${item.displayName.toUpperCase()}</span>
-            <span class="action-value">${item.animationType.toUpperCase()}</span>
+            <span>${item.emoji ? item.emoji + ' ' : ''}${item.displayName.toUpperCase()}</span>
+            <div class="hud-status-pill hud-chip-tooltip" style="position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; transition: opacity var(--transition-fast); white-space: nowrap; z-index: 10; font-size: 9px; padding: 4px 8px; border: 1px solid var(--border-color);">
+              <span class="hud-status-dot cyan"></span>
+              <span>${item.animationType.toUpperCase()}</span>
+            </div>
           `;
+          
+          row.onmouseenter = () => {
+             const tooltip = row.querySelector('.hud-chip-tooltip') as HTMLElement;
+             if (tooltip) tooltip.style.opacity = '1';
+          };
+          row.onmouseleave = () => {
+             const tooltip = row.querySelector('.hud-chip-tooltip') as HTMLElement;
+             if (tooltip) tooltip.style.opacity = '0';
+          };
           sidebarContainer.appendChild(row);
         });
+      }
+      
+      // Initialize MemePreviewComponent now that we have mappings
+      if (previewMount) {
+        // @ts-ignore
+        memePreview = new MemePreviewComponent(previewMount, { gestures, expressions });
       }
     } catch (e) {
       onFailed(e);
@@ -396,7 +466,31 @@ if (app) {
   };
 
   // --- Camera Component Setup & Mounting ---
+  const tvLeftMount = document.getElementById('tv-left-mount');
+  const tvRightMount = document.getElementById('tv-right-mount');
+
+  // Wrap the camera mount with the TV Frame
   const cameraMount = document.getElementById('camera-mount');
+  if (tvLeftMount && cameraMount) {
+    new TVFrameComponent(tvLeftMount, 'CAMERA_01', cameraMount);
+  }
+
+  // Set up MemePreviewComponent inside the right TV
+  const previewMount = document.getElementById('preview-mount');
+  let memePreview: MemePreviewComponent | null = null;
+  if (tvRightMount && previewMount) {
+    new TVFrameComponent(tvRightMount, 'TEMPLATE_PREVIEW', previewMount);
+    // We will initialize memePreview later once mlEngine is loaded to get mappings
+  }
+
+  // --- Onboarding Component Setup ---
+  let onboarding: OnboardingComponent | null = null;
+  if (cameraMount) {
+    onboarding = new OnboardingComponent(cameraMount, () => {
+      // Re-render components or UI state if needed on complete
+    });
+  }
+
   if (cameraMount) {
     camera = new CameraComponent(cameraMount, (capturedDataUrl) => {
       if (capturedDataUrl) {
@@ -410,19 +504,18 @@ if (app) {
         const progressPill = document.createElement('div');
         progressPill.id = 'segmentation-progress-pill';
         progressPill.className = 'hud-status-pill';
-        progressPill.style.position = 'absolute';
-        progressPill.style.top = '50%';
-        progressPill.style.left = '50%';
-        progressPill.style.transform = 'translate(-50%, -50%)';
         progressPill.style.zIndex = '15';
         progressPill.innerHTML = `
           <span class="hud-status-dot cyan"></span>
           <span id="segmentation-status-text">PROCESSING: 0%</span>
         `;
         
-        const cameraContainer = cameraMount.querySelector('.hud-camera-container') as HTMLElement;
-        if (cameraContainer) {
-          cameraContainer.appendChild(progressPill);
+        const centerGap = document.getElementById('center-gap-mount');
+        if (centerGap) {
+          centerGap.appendChild(progressPill);
+        } else {
+          const cameraContainer = cameraMount.querySelector('.hud-camera-container') as HTMLElement;
+          if (cameraContainer) cameraContainer.appendChild(progressPill);
         }
 
         // Run lazy loading and segmentation inside a 3.5s timeout race
@@ -461,7 +554,7 @@ if (app) {
                   ctx.drawImage(cutoutCanvas, 0, 0);
                 }
               }
-              showNoticePill(cameraContainer, 'CUTOUT GENERATED', 'lime');
+              showNoticePill(cameraMount, 'CUTOUT GENERATED', 'lime');
               if (camera) {
                 camera.setCutout(cutoutCanvas);
               }
@@ -552,6 +645,11 @@ if (app) {
       // Inhibit live Hand/Face loop during active segmentation
       if (isSegmenting) return;
 
+      // Feed onboarding if active
+      if (onboarding) {
+        onboarding.update(currentGestureCandidate, currentExpressionCandidate);
+      }
+
       // 1. Calculate FPS
       const now = performance.now();
       frameTimes.push(now);
@@ -630,38 +728,49 @@ if (app) {
 
         // 5. Update Statistics and UI on Confirm (Once per confirmed trigger)
         let statsUpdated = false;
+        let previewNeedsUpdate = false;
 
         // Record confirmed Gesture
         const finalGestureLabel = debouncedGesture ? debouncedGesture.label : null;
         if (finalGestureLabel !== lastRecordedGesture) {
           if (finalGestureLabel) {
-            StatsStore.recordGesture(finalGestureLabel);
+            const unlocked = StatsStore.recordGesture(finalGestureLabel);
+            if (unlocked.length > 0) showMultipleBadgeUnlocks(unlocked);
             statsUpdated = true;
           }
           lastRecordedGesture = finalGestureLabel;
+          previewNeedsUpdate = true;
         }
 
         // Record confirmed Expression
         const finalExpressionLabel = debouncedExpression ? debouncedExpression.label : null;
         if (finalExpressionLabel !== lastRecordedExpression) {
           if (finalExpressionLabel) {
-            StatsStore.recordExpression(finalExpressionLabel);
+            const unlocked = StatsStore.recordExpression(finalExpressionLabel);
+            if (unlocked.length > 0) showMultipleBadgeUnlocks(unlocked);
             statsUpdated = true;
           }
           lastRecordedExpression = finalExpressionLabel;
+          previewNeedsUpdate = true;
         }
 
         // Record confirmed Combo
         if (debouncedCombo !== lastRecordedCombo) {
           if (debouncedCombo) {
-            StatsStore.recordCombo(debouncedCombo);
+            const unlocked = StatsStore.recordCombo(debouncedCombo);
+            if (unlocked.length > 0) showMultipleBadgeUnlocks(unlocked);
             statsUpdated = true;
           }
           lastRecordedCombo = debouncedCombo;
+          previewNeedsUpdate = true;
         }
 
         if (statsUpdated) {
           updateStatsUI();
+        }
+
+        if (previewNeedsUpdate) {
+          memePreview?.update(finalGestureLabel, finalExpressionLabel, debouncedCombo);
         }
 
         // 6. Draw HUD overlays
@@ -687,6 +796,28 @@ if (app) {
         if (finalExpressionLabel) {
           const row = document.getElementById(`sidebar-row-${finalExpressionLabel}`);
           if (row) row.classList.add('active');
+        }
+
+        // 8. Update Confidence Badge (Step 12)
+        const confidenceBadge = document.getElementById('confidence-badge');
+        const confidenceBadgeText = document.getElementById('confidence-badge-text');
+        
+        if (confidenceBadge && confidenceBadgeText) {
+          const activeResult = debouncedGesture || debouncedExpression;
+          if (activeResult) {
+            // @ts-ignore
+            const configs = [...(mlEngine.gestureConfigs || []), ...(mlEngine.expressionConfigs || [])];
+            const cfg = configs.find((c: any) => c.id === activeResult.label);
+            if (cfg) {
+              const confPct = Math.round(activeResult.confidence * 100);
+              confidenceBadgeText.innerText = `${cfg.emoji ? cfg.emoji + ' ' : ''}${cfg.displayName.toUpperCase()} ${confPct}%`;
+              confidenceBadge.style.opacity = '1';
+            } else {
+              confidenceBadge.style.opacity = '0';
+            }
+          } else {
+            confidenceBadge.style.opacity = '0';
+          }
         }
       } else {
         if (metricLatency) {

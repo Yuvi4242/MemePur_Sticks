@@ -4,9 +4,11 @@ import { getSupportedMimeType, encodeWebMSticker } from '../../export/webm';
 import { generateStaticWebp } from '../../export/webp';
 import { downloadStickerPack } from '../../export/pack';
 import { getGallery, addGalleryEntry, removeGalleryEntry, subscribe, GalleryEntry } from '../../state/session-gallery';
+import { StatsStore } from '../../state/stats-store';
+import { showMultipleBadgeUnlocks } from '../badge-toast';
 // @ts-ignore
 import ExportWorker from '../../workers/export-worker?worker';
-
+import { applyMagneticHover, applyRippleEffect } from '../../utils/interactions';
 
 export interface CaptureMetadata {
   gestureLabel: string | null;
@@ -630,6 +632,8 @@ export class CameraComponent {
                     captionText: this.currentCaption,
                     gestureLabel: this.capturedMetadata?.gestureLabel ?? null
                   });
+                  const unlocked = StatsStore.recordExport();
+                  if (unlocked.length > 0) showMultipleBadgeUnlocks(unlocked);
                 }
               } catch (galleryErr) {
                 console.warn('[Export] Failed to generate static WebP for gallery:', galleryErr);
@@ -911,20 +915,7 @@ export class CameraComponent {
         containerEl.appendChild(debugPill);
       }
 
-      // Render export progress pill if active
-      if (this.isExporting) {
-        const progressPill = document.createElement('div');
-        progressPill.className = 'hud-status-pill';
-        progressPill.style.position = 'absolute';
-        progressPill.style.top = '16px';
-        progressPill.style.left = '16px';
-        progressPill.style.zIndex = '12';
-        progressPill.innerHTML = `
-          <span class="hud-status-dot cyan"></span>
-          <span>${this.exportProgressText}</span>
-        `;
-        containerEl.appendChild(progressPill);
-      }
+      // (Progress pill moved to center-gap-mount)
 
       // 3. Bottom HUD Overlay: Shutter or Retake controls
       const bottomOverlay = document.createElement('div');
@@ -988,77 +979,137 @@ export class CameraComponent {
         buttonRow.style.gap = '12px';
         buttonRow.style.alignItems = 'center';
 
-        // Render Export WebM button or unsupported notice badge
-        if (this.previewActive) {
-          const isWebMSupported = getSupportedMimeType() !== null;
-          if (!isWebMSupported) {
-            const warningPill = document.createElement('div');
-            warningPill.className = 'hud-status-pill';
-            warningPill.style.fontSize = '9px';
-            warningPill.style.margin = '0';
-            warningPill.innerHTML = `
-              <span class="hud-status-dot red"></span>
-              <span>WEBM EXPORT UNSUPPORTED</span>
-            `;
-            buttonRow.appendChild(warningPill);
-          } else {
-            const exportBtn = document.createElement('button');
-            exportBtn.className = 'hud-diagnostic-btn';
-            exportBtn.id = 'export-webm-btn';
-            exportBtn.style.margin = '0';
-            exportBtn.style.padding = '10px 20px';
-            exportBtn.innerText = this.isExporting ? 'EXPORTING...' : 'EXPORT WEBM';
-            exportBtn.disabled = this.isExporting;
-            exportBtn.onclick = (e) => {
-              e.stopPropagation();
-              this.exportWebM();
-            };
-            buttonRow.appendChild(exportBtn);
+        const centerGapMount = document.getElementById('center-gap-mount');
+        if (centerGapMount) {
+          centerGapMount.innerHTML = '';
 
-            // Share button (only rendered after a successful WebM export)
-            if (this.currentWebMFile && !this.isExporting) {
-              if (this.canShareCurrentWebM) {
-                // Native Web Share API is available and supports files
-                const shareBtn = document.createElement('button');
-                shareBtn.className = 'hud-diagnostic-btn';
-                shareBtn.id = 'share-webm-btn';
-                shareBtn.style.margin = '0';
-                shareBtn.style.padding = '10px 20px';
-                shareBtn.style.background = 'var(--accent-green, #00e5a0)';
-                shareBtn.style.color = '#000';
-                shareBtn.innerText = this.isSharing ? 'SHARING...' : 'SHARE';
-                shareBtn.disabled = this.isSharing;
-                shareBtn.onclick = async (e) => {
+          // 1. Export Progress Pill (if any)
+          if (this.isExporting) {
+            const progressPill = document.createElement('div');
+            progressPill.className = 'hud-status-pill';
+            progressPill.style.zIndex = '12';
+            progressPill.innerHTML = `
+              <span class="hud-status-dot cyan"></span>
+              <span>${this.exportProgressText}</span>
+            `;
+            centerGapMount.appendChild(progressPill);
+          }
+
+          // Render Export WebM button or unsupported notice badge
+          if (this.previewActive) {
+            const isWebMSupported = getSupportedMimeType() !== null;
+            if (!isWebMSupported) {
+              const warningPill = document.createElement('div');
+              warningPill.className = 'hud-status-pill';
+              warningPill.style.fontSize = '9px';
+              warningPill.innerHTML = `
+                <span class="hud-status-dot red"></span>
+                <span>WEBM EXPORT UNSUPPORTED</span>
+              `;
+              centerGapMount.appendChild(warningPill);
+            } else {
+              const exportBtn = document.createElement('button');
+              exportBtn.className = 'hud-diagnostic-btn';
+              exportBtn.id = 'export-webm-btn';
+              exportBtn.style.padding = '12px 24px';
+              exportBtn.style.fontSize = '12px';
+              exportBtn.style.fontWeight = 'bold';
+              exportBtn.innerText = this.isExporting ? 'EXPORTING...' : 'DOWNLOAD ANIMATED STICKER ⬇';
+              exportBtn.disabled = this.isExporting;
+              exportBtn.onclick = (e) => {
+                e.stopPropagation();
+                this.exportWebM();
+              };
+              
+              applyMagneticHover(exportBtn);
+              applyRippleEffect(exportBtn);
+              
+              centerGapMount.appendChild(exportBtn);
+
+              // Secondary Row for Share and Download Pack
+              const secondaryRow = document.createElement('div');
+              secondaryRow.style.display = 'flex';
+              secondaryRow.style.gap = '12px';
+              secondaryRow.style.marginTop = '8px';
+              secondaryRow.style.alignItems = 'center';
+
+              // Share button (only rendered after a successful WebM export)
+              if (this.currentWebMFile && !this.isExporting) {
+                if (this.canShareCurrentWebM) {
+                  // Native Web Share API is available and supports files
+                  const shareBtn = document.createElement('button');
+                  shareBtn.className = 'hud-diagnostic-btn';
+                  shareBtn.id = 'share-webm-btn';
+                  shareBtn.style.margin = '0';
+                  shareBtn.style.padding = '10px 20px';
+                  shareBtn.style.background = 'var(--accent-green, #00e5a0)';
+                  shareBtn.style.color = '#000';
+                  shareBtn.innerText = this.isSharing ? 'SHARING...' : 'SHARE';
+                  shareBtn.disabled = this.isSharing;
+                  shareBtn.onclick = async (e) => {
+                    e.stopPropagation();
+                    if (!this.currentWebMFile) return;
+                    this.isSharing = true;
+                    this.render();
+                    try {
+                      await navigator.share({ files: [this.currentWebMFile], title: 'Meme Verse Sticker' });
+                    } catch (shareErr: any) {
+                      if (shareErr.name !== 'AbortError') {
+                        console.warn('[Share] navigator.share failed:', shareErr);
+                      }
+                    } finally {
+                      this.isSharing = false;
+                      this.render();
+                    }
+                  };
+                  secondaryRow.appendChild(shareBtn);
+                } else {
+                  // Fallback: manual share guide toggle button
+                  const guideBtn = document.createElement('button');
+                  guideBtn.className = 'hud-retake-btn';
+                  guideBtn.id = 'share-guide-btn';
+                  guideBtn.style.margin = '0';
+                  guideBtn.style.padding = '10px 16px';
+                  guideBtn.innerText = this.showShareManualGuide ? 'HIDE GUIDE' : 'HOW TO SHARE';
+                  guideBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    this.showShareManualGuide = !this.showShareManualGuide;
+                    this.render();
+                  };
+                  secondaryRow.appendChild(guideBtn);
+                }
+              }
+
+              // Also add Download Pack button to secondary row
+              if (this.galleryItems.length > 0) {
+                const packBtn = document.createElement('button');
+                packBtn.className = 'hud-diagnostic-btn';
+                packBtn.id = 'download-pack-btn';
+                packBtn.style.cssText = 'margin:0;padding:10px 16px;';
+                packBtn.innerText = this.isBundlingPack ? 'PACKAGING...' : 'DOWNLOAD PACK';
+                packBtn.disabled = this.isBundlingPack;
+                packBtn.onclick = async (e) => {
                   e.stopPropagation();
-                  if (!this.currentWebMFile) return;
-                  this.isSharing = true;
+                  this.isBundlingPack = true;
                   this.render();
                   try {
-                    await navigator.share({ files: [this.currentWebMFile], title: 'Meme Verse Sticker' });
-                  } catch (shareErr: any) {
-                    if (shareErr.name !== 'AbortError') {
-                      console.warn('[Share] navigator.share failed:', shareErr);
-                    }
+                    await downloadStickerPack(getGallery(), (stage) => {
+                      this.exportProgressText = stage;
+                      this.render();
+                    });
+                  } catch (packErr) {
+                    console.error('[Pack] Download failed:', packErr);
                   } finally {
-                    this.isSharing = false;
+                    this.isBundlingPack = false;
+                    this.exportProgressText = '';
                     this.render();
                   }
                 };
-                buttonRow.appendChild(shareBtn);
-              } else {
-                // Fallback: manual share guide toggle button
-                const guideBtn = document.createElement('button');
-                guideBtn.className = 'hud-retake-btn';
-                guideBtn.id = 'share-guide-btn';
-                guideBtn.style.margin = '0';
-                guideBtn.style.padding = '10px 16px';
-                guideBtn.innerText = this.showShareManualGuide ? 'HIDE GUIDE' : 'HOW TO SHARE';
-                guideBtn.onclick = (e) => {
-                  e.stopPropagation();
-                  this.showShareManualGuide = !this.showShareManualGuide;
-                  this.render();
-                };
-                buttonRow.appendChild(guideBtn);
+                secondaryRow.appendChild(packBtn);
+              }
+
+              if (secondaryRow.children.length > 0) {
+                centerGapMount.appendChild(secondaryRow);
               }
             }
           }
@@ -1075,6 +1126,7 @@ export class CameraComponent {
           e.stopPropagation();
           this.retake();
         };
+        applyRippleEffect(retakeBtn);
         buttonRow.appendChild(retakeBtn);
         bottomOverlay.appendChild(buttonRow);
 
@@ -1103,12 +1155,15 @@ export class CameraComponent {
         // Show Shutter button
         const shutterBtn = document.createElement('button');
         shutterBtn.className = 'hud-shutter-btn';
+        shutterBtn.innerText = 'SNAP';
         shutterBtn.setAttribute('aria-label', 'Capture photo frame');
+        shutterBtn.style.zIndex = '50';
         shutterBtn.onclick = (e) => {
           e.stopPropagation();
           const metadata = this.onCaptureRequestCallback ? this.onCaptureRequestCallback() : null;
           this.captureFrame(metadata);
         };
+        applyRippleEffect(shutterBtn);
         bottomOverlay.appendChild(shutterBtn);
       }
 
@@ -1141,32 +1196,6 @@ export class CameraComponent {
           <span>SESSION GALLERY // ${this.galleryItems.length}/8 STICKERS</span>
         `;
         trayHeader.appendChild(trayLabel);
-
-        // Download Pack button
-        const packBtn = document.createElement('button');
-        packBtn.className = 'hud-diagnostic-btn';
-        packBtn.id = 'download-pack-btn';
-        packBtn.style.cssText = 'margin:0;padding:6px 14px;font-size:10px;';
-        packBtn.innerText = this.isBundlingPack ? 'PACKAGING...' : 'DOWNLOAD PACK';
-        packBtn.disabled = this.isBundlingPack;
-        packBtn.onclick = async (e) => {
-          e.stopPropagation();
-          this.isBundlingPack = true;
-          this.render();
-          try {
-            await downloadStickerPack(getGallery(), (stage) => {
-              this.exportProgressText = stage;
-              this.render();
-            });
-          } catch (packErr) {
-            console.error('[Pack] Download failed:', packErr);
-          } finally {
-            this.isBundlingPack = false;
-            this.exportProgressText = '';
-            this.render();
-          }
-        };
-        trayHeader.appendChild(packBtn);
         galleryTray.appendChild(trayHeader);
 
         // Thumbnail strip

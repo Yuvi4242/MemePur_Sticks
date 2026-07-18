@@ -1,6 +1,6 @@
-# Meme Verse 2.0
+# MemePur_Sticks
 
-An enhanced, high-reliability rebuild of the browser-only Meme Verse application. The new version features a local "Selfie-to-Sticker" animated pipeline.
+An enhanced, high-reliability rebuild of the browser-only Meme Verse application (formerly Meme Verse 2.0). The new version features a local "Selfie-to-Sticker" animated pipeline.
 
 ## Tech Stack
 - **Build tool:** Vite
